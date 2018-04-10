@@ -1,0 +1,9 @@
+bin/
+build/
+.gradle/
+.sts4-cache/
+
+### Eclipse ###
+.project
+.settings
+.classpath

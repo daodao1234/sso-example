@@ -1,0 +1,8 @@
+---
+server:
+  port: 9453
+
+sso:
+  apiUrl: https://portal-sso.{Paas domain name}.com/v1.3
+  username: {username on PaaS}
+  password: {password on PaaS}
