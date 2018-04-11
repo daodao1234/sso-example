@@ -3,12 +3,12 @@ PaaS provides a single sign-on authentication scheme. With single sign-on, users
 
 Single sign-on offers two ways to integrate, one for web-based applications and the other for native applications.
 
-Download and unzip the source repository for this guide, or clone it using Git: 
+You can download the source repository for this guide, or clone it using Git: 
 ```
 git clone https://github.com/ironman1990/sso-example
 ```
 
-## Web-Based Application
+## Web-Based Application ([How to push](https://docs.cloudfoundry.org/buildpacks/staticfile/index.html))
 For web-based integration way, users need to log in using a single sign-on scheme to obtain a **EIToken** cookie to complete the authentication. For example, 'Technical Portal'.
 
 Besides, front-end application can't directly get this cookie from browser due to security issue. But it can still get user information through Ajax.
@@ -97,7 +97,7 @@ After HTTP request completed, user logged in will execute scripts in **done** ca
 ### [Testing]
 Push application to PaaS, then enter **https://{subdomain name of your application}.{PaaS domain name}** to do login and logout.
 
-## Native Application
+## Native Application ([How to push](https://github.com/cloudfoundry/java-buildpack))
 For native integration way, here is a java-based tutorial. The example will learn how to obtain **EIToken** and use it to obtain user information.
 
 ### [Prerequisite]
