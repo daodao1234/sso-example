@@ -1,0 +1,6 @@
+applications:
+- name: {fill your application name}
+  path: build/libs/native-0.1.0.jar
+  memory: 256M
+  buildpack: java_buildpack_offline
+  disk_quota: 256M
