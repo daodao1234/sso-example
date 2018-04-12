@@ -3,6 +3,9 @@ server:
   port: 9453
 
 sso:
+  # replace {PaaS domain name} with your PaaS domain
   apiUrl: https://portal-sso.{Paas domain name}.com/v1.3
+  # set to your username on PaaS
   username: {username on PaaS}
+  # set to your password on PaaS
   password: {password on PaaS}

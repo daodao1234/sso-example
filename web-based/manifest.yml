@@ -1,5 +1,9 @@
 applications:
+  # set to your application name
 - name: sso-web-ex
+  # specify the memory limit of your application
   memory: 64M
+  # specify the buildpack on PaaS
   buildpack: staticfile_buildpack
+  # allocate disk space of your application
   disk_quota: 128M

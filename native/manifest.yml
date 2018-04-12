@@ -1,6 +1,11 @@
 applications:
-- name: {fill your application name}
+  # set to your application name
+- name: sso-native-ex
+  # set to your application path
   path: build/libs/native-0.1.0.jar
+  # specify the memory limit of your application
   memory: 256M
+  # specify the buildpack on PaaS
   buildpack: java_buildpack_offline
+  # allocate disk space of your application
   disk_quota: 256M
