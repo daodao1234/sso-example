@@ -2,7 +2,7 @@ applications:
   # set to your application name
 - name: sso-native-ex
   # set to your application path
-  path: build/libs/native-0.1.0.jar
+  path: build/libs/backend-0.1.0.jar
   # specify the memory limit of your application
   memory: 256M
   # specify the buildpack on PaaS

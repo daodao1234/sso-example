@@ -1,20 +1,28 @@
-﻿# SSO Integration Tutorial
-PaaS provides a single sign-on authentication scheme. With single sign-on, users only need to log in once to use different applications on the PaaS.
+﻿# SSO 整合教學
 
-Single sign-on offers two ways to integrate, one for web-based applications and the other for native applications.
+PaaS 提供單一登入身份驗證方案。使用單一登入, 使用者只需登入一次即可使用在 PaaS 上不同的應用程式。
 
-You can download the source repository for this guide, or clone it using Git: 
+單一登入提供了兩種整合方式, 一種用於前端應用程式, 另一種則用於後端（原生）應用程式。
+
+您可以下載本教學的開源代碼庫, 或使用 Git clone：
 ```
 git clone https://github.com/ironman1990/sso-example
 ```
 
-## Web-Based Application ([How to push](https://docs.cloudfoundry.org/buildpacks/staticfile/index.html))
-For web-based integration way, users need to log in using a single sign-on scheme to obtain a **EIToken** cookie to complete the authentication. For example, 'Technical Portal'.
+## API 文件
 
-Besides, front-end application can't directly get this cookie from browser due to security issue. But it can still get user information through Ajax.
+範例程式碼中所使用的 API 可以在此[文件](../../../doc/document-portal.html#SSO-2)中找到。
+
+## 前端應用程式
+
+以前端的整合方式來說，使用者必須使用單一登入方案進行登入才能獲得 **EIToken** cookie 來完成身份驗證。例如 [Technical Portal](../../../index.html) 就是這樣。
+
+此外，由於安全問題，前端應用程式是無法直接從瀏覽器取得此 cookie 的。但它仍然可以透過 Ajax 取得使用者資訊。
+
+  ![](../uploads/images/SSO/frontendSignIn.png)
 
 ### [HTML]
-#### Step 1. Create index.html
+#### 步驟 1. 建立 index.html
 ```
 <!DOCTYPE html>
 <html>
@@ -26,41 +34,41 @@ Besides, front-end application can't directly get this cookie from browser due t
 </body>
 </html>
 ```
-You can change title in `<title>` at your discretion. Here is **SSO Example**.
+您可以自行決定是否更改在 `<title>` 中的網頁標題。此範例預設為 **SSO Example**。
 
-#### Step 2. Import [jQuery](https://jquery.com/) library and index.js before closing `</body>` tag
+#### 步驟 2. 在結束標記 `</body>` 之前導入 [jQuery](https://jquery.com/) 函式庫與 index.js
 ```
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
     <script src="index.js"></script>
 ```
-This example will use jQuery and custom JavaScript index.js.
+本範例將使用 jQuery 和自訂的 JavaScript：index. js。
 
-#### Step 3. Add `<button>`s, `<h1>` after `<body>` tag
+#### 步驟 3. 在起始標記 `<body>` 之後新增 `<button>` 與 `<h1>`
 ```
     <button class="btn btn-primary" id="signInBtn" style="display: none;">Sign in</button>
     <button class="btn btn-primary" id="signOutBtn" style="display: none;">Sign out</button>
     <h1 id="helloMsg"></h1>
 ```
-Two `<button>`s are used to do login and logout respectively.`<h1>`is used to distinguish between login and logout message display.
+兩個 `<button>` 分別用於執行登入和登出操作。`<h1>` 則用於區分登入和登出的訊息顯示。
 
 ### [JavaScript]
-#### Step 1. Create index.js
+#### 步驟 1. 建立 index.js
 ```
 $(function  ()  {
     // Add Step 2. to Step 4. here
 });
 ```
-The jQuery method offers a way to run JavaScript code as soon as the page's Document Object Model (DOM) becomes safe to manipulate.
+jQuery 提供了一種當頁面的[文件物件模型（DOM）](https://developer.mozilla.org/zh-TW/docs/Web/API/Document_Object_Model)變為可安全操作狀態後立即執行 JavaScript 程式碼的方法。
 
-#### Step 2. Add myUrl and ssoUrl variables
+#### 步驟 2. 新增 myUrl 與 ssoUrl 變數
 ```
     var myUrl = window.location.protocol + '//' + window.location.hostname;
     var ssoUrl = myUrl.replace('sso-web-ex', 'portal-sso');
 ```
-**myUrl** is the URL of your application on PaaS.
-**ssoUrl** is the URL of SSO on PaaS. You should replace **sso-web-ex** with subdomain name of your application. The domain name for this example is assumed to be https://**sso-web-ex**.{PaaS domain name}.
+**myUrl** 是此範例程式在 PaaS 上的 URL。
+**ssoUrl** 是 SSO 在 PaaS 上的 URL。這裡的 **sso-web-ex** 是根據應用程式的子網域名稱設定的，必須與 manifest.yml 裡的 name 參數保持一致，因為 name 參數即 PaaS 給予應用程式的子網域名稱，可依需求進行變更。
 
-#### Step 3. Add click function of login and logout buttons
+#### 步驟 3. 新增登入和登出按鈕的 click 函式
 ```
     $('#signInBtn').click(function () {
         window.location.href = ssoUrl + '/web/signIn.html?redirectUri=' + myUrl;
@@ -70,9 +78,9 @@ The jQuery method offers a way to run JavaScript code as soon as the page's Docu
         window.location.href = ssoUrl + '/web/signOut.html?redirectUri=' + myUrl;
     });
 ```
-The main behavior here is to redirect to the SSO page with the parameter **redirectUri**.
+這裡的主要行為是重新導向並傳遞 **redirectUri** 參數至 SSO 頁面。
 
-#### Step 4. Add a [Ajax](http://api.jquery.com/jquery.ajax/) function to identify the user's login status
+#### 步驟 4. 新增一個 [Ajax](http://api.jquery.com/jquery.ajax/) 函式用以識別使用者的登入狀態
 ```
     $.ajax({
         url: ssoUrl + '/v1.3/users/me',
@@ -91,21 +99,29 @@ The main behavior here is to redirect to the SSO page with the parameter **redir
         $('#helloMsg').text('Hi, please sign in first.');
     });
 ```
-Because your application has a cross-domain relationship with SSO, it is necessary to set **withCredentials** to true. 
-After HTTP request completed, user logged in will execute scripts in **done** callback, otherwise scripts in **fail** callback will be executed. In **done** callback, will display logout button and 'Hello, O O!' message. In **fail** callback, will display login button and 'Hi, please sign in first.' message.
+由於應用程式與 SSO 屬跨網域的關係，因此必須將 **withCredentials** 設置為 true。
+HTTP 請求完成後，使用者已登入會執行 **done** 回調函式中的語法，否則將執行 **fail** 回調函式中的語法。**done** 回調函式將會顯示登出按鈕與 'Hello, O O!' 的歡迎訊息，**fail** 回調函式則將會顯示登入按鈕與 'Hi, please sign in first' 的登入訊息。
 
-### [Testing]
-Push application to PaaS, then enter **https://{subdomain name of your application}.{PaaS domain name}** to do login and logout.
+### [測試]
+1. 修改 manifest.yml
+2. 登入並將應用程式推送到 PaaS
+```
+    $ cf login -a api.iii-cflab.com -u {your username} -p {password}
+    $ cf push -f manifest.yml
+```
+3. 進入 **https://{應用程式的子網域名稱}.{PaaS的主網域名稱}** 執行登入與登出操作。
 
-## Native Application ([How to push](https://github.com/cloudfoundry/java-buildpack))
-For native integration way, here is a java-based tutorial. The example will learn how to obtain **EIToken** and use it to obtain user information.
+## 後端（原生）應用程式
+以後端（原生）的整合方式來說，這裡提供的是一個基於 Java 的範例。本範例將學習如何取得 **EIToken** 並透過它取得使用者資訊。
 
-### [Prerequisite]
+  ![](../uploads/images/SSO/nativeSignIn.png)
+
+### [前置條件]
 1. [Java 1.8](https://java.com/zh_TW/)
 2. [Gradle](https://gradle.org/)
 3. [Spring Boot](https://projects.spring.io/spring-boot/)
 
-### [Directory Tree]
+### [資料夾目錄樹狀圖]
 ```
 sso-native-ex
  |--src
@@ -126,10 +142,11 @@ sso-native-ex
  |     |--resources
  |        |--application.yml
  |--build.gradle
+ |--manifest.yml
 ```
 
-### [Configuration]
-#### Step 1. Create build.gradle
+### [設定]
+#### 步驟 1. 建立 build.gradle
 ```
 buildscript {
 	ext {
@@ -162,7 +179,7 @@ dependencies {
 }
 ```
 
-#### Step 2. Create application.yml
+#### 步驟 2. 建立 application.yml
 ```
 server:
   port: 9453
@@ -172,13 +189,13 @@ sso:
   username: {username on PaaS}
   password: {password on PaaS}
 ```
-If you want to test application locally, set **port** to unused port on your device, here is **9453** port.
-Replace **{PaaS domain name}** with PaaS domain name.
-Replace **{username on PaaS}** with your PaaS username.
-Replace **{password on PaaS}** with your PaaS password.
+如果要在本機測試應用程式，請將 port 的值更改為執行環境上未使用的連接埠，這裡預設連接埠為**9453**。
+將 **{PaaS domain name}** 替換為 PaaS 的主網域名稱。
+將 **{username on PaaS}** 替換為您在 PaaS 上的使用者名稱。
+將 **{password on PaaS}** 替換為您在 PaaS 上的密碼。
 
 ### [Java]
-#### Step 1. Create App.java
+#### 步驟 1. 建立 App.java
 ```
 package com.sso.example;
 
@@ -195,7 +212,7 @@ public class App {
 }
 ```
 
-#### Step 2. Create Auth.java
+#### 步驟 2. 建立 Auth.java
 ```
 package com.sso.example.model;
 
@@ -234,9 +251,9 @@ public class Auth {
 
 }
 ```
-The **Auth** model is the request body that must be included when sending a HTTP request to SSO for authentication.
+**Auth** 模型是向 SSO 發送身份驗證的 HTTP 請求時所須包含的請求正文（request body）。
 
-#### Step 3. Create TokenPackage.java
+### 步驟 3. 建立 TokenPackage.java
 ```
 package com.sso.example.model;
 
@@ -287,9 +304,9 @@ public class TokenPackage {
 
 }
 ```
-The **TokenPackage** model is the response body that SSO returns when authentication passes. The **AccessToken** attribute here is **EIToken**.
+**TokenPackage** 模型是在身份驗證通過後 SSO 回傳的回應正文（response body）。這裡的 **AccessToken** 屬性即 **EIToken**。
 
-#### Step 4. Create User.java
+#### 步驟 4. 建立 User.java
 ```
 package com.sso.example.model;
 
@@ -367,9 +384,9 @@ public class User {
 
 }
 ```
-The **User** model is the response body that SSO returns when get user successfully.
+**User** 模型是在取得使用者資訊成功時 SSO 回傳的回應正文。
 
-#### Step 5. Create SsoService.java
+#### 步驟 5. 建立 SsoService.java
 ```
 package com.sso.example.service;
 
@@ -432,9 +449,9 @@ public class SsoService {
 
 }
 ```
-Partial SSO API endpoints do not require access tokens, such as '/auth/native', using the **getHeadersWithoutToken()** method. Conversely, such as '/users/me ', using the **getHeadersWithToken()** method.
+部份 SSO API 端點不需要存取權杖，例如 '/auth/native',使用 **getHeadersWithoutToken()** 方法。反之如 '/users/me'，則使用 **getHeadersWithToken()** 方法。
 
-#### Step 6. Create HelloController.java
+#### 步驟 6. 建立 HelloController.java
 ```
 package com.sso.example.controller;
 
@@ -460,8 +477,17 @@ public class HelloController {
 
 }
 ```
-Generate an API endpoint **/hello** to show welcome message.
+最後再產生 API 端點 **/hello** 來顯示通過 SSO 身份驗證的歡迎訊息。
 
-### [Testing]
-1. Execute application locally and enter **http://localhost:9453/hello** will see Hello, O O!.
-2. Push application to PaaS, then enter **https://{subdomain name of your application}.{PaaS domain name}/hello** will see Hello, O O!.
+### [測試]
+#### 方法 1 
+1. 本機執行應用程式並於網址列輸入 **http://localhost:9453/hello** 將會顯示 Hello, O O!
+
+#### 方法 2
+1. 修改 manifest.yml
+2. 登入並將應用程式推送到 PaaS
+```
+    $ cf login -a api.iii-cflab.com -u {your username} -p {password}
+    $ cf push -f manifest.yml
+```
+3. 輸入 **https://{應用程式的子網域名稱}.{PaaS 主網域名稱}/hello** 將會顯示 Hello, O O!
