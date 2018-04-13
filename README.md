@@ -11,15 +11,13 @@ git clone https://github.com/ironman1990/sso-example
 
 ## API 文件
 
-範例程式碼中所使用的 API 可以在此[文件](../../../doc/document-portal.html#SSO-2)中找到。
+範例程式碼中所使用的 API 可以在此[文件](https://portal-technical.wise-paas.com/doc/document-portal.html#SSO-2)中找到。
 
 ## 前端應用程式
 
-以前端的整合方式來說，使用者必須使用單一登入方案進行登入才能獲得 **EIToken** cookie 來完成身份驗證。例如 [Technical Portal](../../../index.html) 就是這樣。
+以前端的整合方式來說，使用者必須使用單一登入方案進行登入才能獲得 **EIToken** cookie 來完成身份驗證。例如 [Technical Portal](https://portal-technical.wise-paas.com) 就是這樣。
 
 此外，由於安全問題，前端應用程式是無法直接從瀏覽器取得此 cookie 的。但它仍然可以透過 Ajax 取得使用者資訊。
-
-  ![](../uploads/images/SSO/frontendSignIn.png)
 
 ### [HTML]
 #### 步驟 1. 建立 index.html
@@ -113,8 +111,6 @@ HTTP 請求完成後，使用者已登入會執行 **done** 回調函式中的�
 
 ## 後端（原生）應用程式
 以後端（原生）的整合方式來說，這裡提供的是一個基於 Java 的範例。本範例將學習如何取得 **EIToken** 並透過它取得使用者資訊。
-
-  ![](../uploads/images/SSO/nativeSignIn.png)
 
 ### [前置條件]
 1. [Java 1.8](https://java.com/zh_TW/)
@@ -253,7 +249,7 @@ public class Auth {
 ```
 **Auth** 模型是向 SSO 發送身份驗證的 HTTP 請求時所須包含的請求正文（request body）。
 
-### 步驟 3. 建立 TokenPackage.java
+#### 步驟 3. 建立 TokenPackage.java
 ```
 package com.sso.example.model;
 
